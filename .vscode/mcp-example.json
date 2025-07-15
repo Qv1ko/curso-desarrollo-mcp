@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "weather": {
+      "command": "bun",
+      "args": ["run", "main.ts-path"]
+    }
+  }
+}
