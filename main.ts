@@ -19,8 +19,33 @@ server.tool(
     city: z.string().describe("City name"),
   }, // parametros
   async ({ city }) => {
+    const response = await fetch(
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+        city
+      )}&count=1&language=en&format=json`
+    );
+    const data: any = await response.json();
+
+    if (!data.results || data.results.length === 0) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `No se encontro información sobre el clima de ${city}`,
+          },
+        ],
+      };
+    }
+
+    const { latitude, longitude } = data.results[0];
+
+    const weatherResponse = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&current=temperature_2m,is_day,precipitation,rain,relative_humidity_2m,apparent_temperature,showers,snowfall,weather_code,cloud_cover,pressure_msl,surface_pressure&forecast_days=1`
+    );
+    const weatherData = await weatherResponse.json();
+
     return {
-      content: [{ type: "text", text: `El clima de ${city} es soleado` }],
+      content: [{ type: "text", text: JSON.stringify(weatherData, null, 2) }],
     };
   } // tratamiento de la información
 );
