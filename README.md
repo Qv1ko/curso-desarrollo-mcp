@@ -1,2 +1,3 @@
-# curso-desarrollo-mcp
-Repositorio para el curso de desarrollo MCP
+# Curso de desarrollo de un MCP
+
+![Example video](./example/example_video.gif)
